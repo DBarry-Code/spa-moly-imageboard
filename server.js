@@ -7,7 +7,6 @@ const port = 3000;
 
 //handlebars setup
 const hb = require("express-handlebars");
-const { response } = require("express");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
@@ -27,6 +26,7 @@ app.get("/", (req, res) => {
     });
 });
 
+//POST from hompage
 app.post("/", (req, res) => {
     const { first_name, last_name, signature } = req.body;
 
@@ -41,6 +41,7 @@ app.post("/", (req, res) => {
         });
 });
 
+//Get thank you page
 app.get("/thank-you", (req, res) => {
     if (!req.cookies.signed) {
         res.redirect("/");
@@ -59,14 +60,16 @@ app.get("/thank-you", (req, res) => {
         });
 });
 
+// all singner page only with link
 app.get("/signatures", (req, res) => {
     getSignatures()
         .then((signatures) => {
             res.render("signatures", {
-                text: "Thats all :",
+                text: "Thats all:",
                 signatures,
                 headcount: `${signatures.length} signers all ready`,
             });
+            //console.log(signatures);
         })
         .catch((error) => {
             console.log("can't get signatures", error);

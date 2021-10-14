@@ -1,9 +1,9 @@
 {{> header }}
 <main>
     <h2>{{text}}</h2>
-    {{headcount}}
-    {{#if signatures}}
-   <p>{{first_name}} {{last_name}}</p> 
-    {{/if}}
+    <p>{{headcount}}</p>
+    {{#each signatures}}
+    {{> signature}} 
+    {{/each}}
 </main>
 {{> footer }}
