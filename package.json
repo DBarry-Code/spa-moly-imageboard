@@ -5,23 +5,23 @@
     "main": "server.js",
     "scripts": {
         "test": "jest",
-        "start": "node server.js"
+        "start": "nodemon server.js --w"
     },
     "engines": {
-        "node": "14.15.1"
+        "node": "^16.11.0"
     },
-    "author": "",
+    "author": "Bartlomiej Dabrowski",
     "license": "ISC",
     "dependencies": {
         "bcryptjs": "^2.4.3",
-        "cookie-parser": "^1.4.3",
+        "cookie-parser": "^1.4.5",
         "cookie-session": "^2.0.0-alpha.1",
-        "csurf": "^1.9.0",
-        "express": "^4.14.0",
-        "express-handlebars": "^3.0.0",
-        "jest": "^25.1.0",
-        "redis": "^2.6.2",
+        "csurf": "^1.11.0",
+        "express": "^4.17.1",
+        "express-handlebars": "^5.3.4",
+        "jest": "^27.2.5",
+        "redis": "^3.1.2",
         "spiced-pg": "^1.0.4",
-        "supertest": "^4.0.2"
+        "supertest": "^6.1.6"
     }
 }
