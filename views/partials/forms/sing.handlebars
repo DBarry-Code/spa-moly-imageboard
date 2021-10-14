@@ -1,0 +1,39 @@
+<form action="/" method="POST">
+    <div class="formInput">
+        <label for="first">First Name</label>
+        <input
+            type="text"
+            name="first_name"
+            placeholder="First name"
+            value="{{first}}"
+            required
+        />
+    </div>
+
+    <div class="fromInput">
+        <label for="last">Last Name</label>
+        <input
+            type="text"
+            name="last_name"
+            placeholder="Last name"
+            value="{{last}}"
+            required
+        />
+    </div>
+
+    <div class="fromCanvas">
+        <label for="signature">Your signature</label>
+        <canvas id="signature-canvas"></canvas>
+        <!-- REMEMBER: remove the value after implementing the feature! -->
+        <input
+            type="hidden"
+            name="signature"
+            value="data:image/png;base64,hello"
+        />
+    </div>
+
+    <div class="formBtn">
+        <button type="submit">Submit</button>
+    </div>
+
+</form>
