@@ -23,18 +23,15 @@
 
     <div class="fromCanvas">
         <label for="signature">Your signature</label>
-        <canvas id="signature-pad" width="600px" height="100px"></canvas>
+        <canvas id="signature-pad" width="500px" height="100px"></canvas>
         <!-- REMEMBER: remove the value after implementing the feature! -->
-        <input
-            type="hidden"
-            name="signature"
-            value="data:image/png;base64,hello"
-        />
+        <input type="hidden" name="signature" id="sigimg" value="" />
     </div>
 
     <div class="formBtn">
-        <button id="clear">Clear</button>
-        <button type="submit">Submit</button>
+
+        <button id="submit" type="submit">Submit</button>
     </div>
 
 </form>
+<button id="clear">Clear</button>

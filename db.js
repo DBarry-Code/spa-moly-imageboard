@@ -21,13 +21,13 @@ function getSignatures() {
 function getSignatureCount() {
     return db
         .query("SELECT COUNT(id) FROM signatures")
-        .then((result) => result.row[0].count);
+        .then((result) => result.rows[0].count);
 }
 
 function getSignatureById(id) {
     return db
         .query("SELECT * FROM signatures WHERE id = $1", [id])
-        .then((result) => result.row[0]);
+        .then((result) => result.rows[0]);
 }
 
 module.exports = {
