@@ -26,7 +26,7 @@ function getSignatureCount() {
 
 function getSignatureById(id) {
     return db
-        .query("SELECT signatures WHERE id = $1", [id])
+        .query("SELECT * FROM signatures WHERE id = $1", [id])
         .then((result) => result.row[0]);
 }
 

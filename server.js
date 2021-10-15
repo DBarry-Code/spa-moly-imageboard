@@ -64,7 +64,7 @@ app.get("/thank-you", (req, res) => {
     }
 
     Promise.all([getSignatureById(id), getSignatureCount()])
-        .then(([headcount, signature]) => {
+        .then(([signature, headcount]) => {
             console.log(headcount, signature);
             res.render("thank-you", {
                 text: "Thanks for signing",
