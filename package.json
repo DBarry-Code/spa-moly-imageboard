@@ -5,7 +5,9 @@
     "main": "server.js",
     "scripts": {
         "test": "jest",
-        "start": "nodemon server.js --w"
+        "start": "nodemon server.js --w",
+        "db-server": "sudo service postgresql start",
+        "db-work": "sudo -u barry psql -d petition_barry"
     },
     "engines": {
         "node": "^16.11.0"

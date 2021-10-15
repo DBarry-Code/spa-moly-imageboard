@@ -18,7 +18,21 @@ function getSignatures() {
     return db.query("SELECT * FROM signatures").then((result) => result.rows);
 }
 
+function getSignatureCount() {
+    return db
+        .query("SELECT COUNT(id) FROM signatures")
+        .then((result) => result.row[0].count);
+}
+
+function getSignatureById(id) {
+    return db
+        .query("SELECT signatures WHERE id = $1", [id])
+        .then((result) => result.row[0]);
+}
+
 module.exports = {
     createSignatures,
     getSignatures,
+    getSignatureById,
+    getSignatureCount,
 };
