@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Merienda:wght@400;700&display=swap");
 * {
     box-sizing: border-box;
     margin: 0;
@@ -5,13 +6,130 @@
 }
 
 body {
+    height: 100vh;
+    background-color: white;
+    color: black;
+    display: grid;
+    font-family: Merienda;
+    grid-template-rows: 70px 1fr 30px;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+}
+
+header {
+    grid-area: header;
+    align-self: center;
+    justify-self: center;
+}
+
+main {
+    grid-area: main;
     height: 100%;
-    /* background-image: url("./assets/img/html.jpg");
-    background-size: cover; */
-    background-color: cadetblue;
-    color: white;
+    justify-self: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.firstImg {
+    height: 300px;
+    width: 210px;
+    border-radius: 5px;
+    box-shadow: 10px 20px 15px silver;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    align-self: center;
+}
+
+.secondImg {
+    height: 400px;
+    width: 300px;
+    box-shadow: 10px 20px 15px silver;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.thirdImg {
+    height: 300px;
+    width: 250px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.showsig {
+    height: 100px;
+    width: 500px;
+}
+
+form {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.formFirst input,
+.formLast input {
+    height: 35px;
+    width: 65%;
+    margin-bottom: 15px;
+}
+
+.formLast input {
+    margin-left: 2px;
+}
+
+.fromCanvas {
+    display: flex;
+    flex-direction: column;
 }
 
 #signature-pad {
+    margin-top: -15px;
+    height: 100px;
+    width: 100%;
     background-color: white;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.formBtn {
+    margin-top: 5px;
+    align-self: center;
+}
+
+#submit {
+    margin-top: 15px;
+    background-color: green;
+}
+
+#clear {
+    background-color: red;
+}
+
+.btn {
+    align-self: center;
+    font-size: 16px;
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10rem;
+    border: none;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 0.15rem;
+}
+
+.signersLink {
+    font-size: 25px;
+    color: black;
+}
+
+.footer {
+    grid-area: footer;
+    margin-top: 15px;
+    padding: 5px;
 }

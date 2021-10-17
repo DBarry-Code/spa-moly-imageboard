@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
         return;
     }
     res.render("index", {
-        text: "Please sign",
+        text: "Please sign to my 'NO PINEAPPLE ON PIZZA' movement",
     });
 });
 
@@ -68,7 +68,7 @@ app.get("/thank-you", (req, res) => {
         .then(([signature, headcount]) => {
             //console.log(headcount, signature);
             res.render("thank-you", {
-                text: "Thanks for signing",
+                text: "thanks for signing, now you are a",
                 signature,
                 headcount,
             });
@@ -84,7 +84,7 @@ app.get("/signatures", (req, res) => {
     getSignatures()
         .then((signatures) => {
             res.render("signatures", {
-                text: "Thats all:",
+                text: "All singers:",
                 signatures,
                 headcount: `${signatures.length} signers all ready`,
             });
