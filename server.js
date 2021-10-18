@@ -4,9 +4,8 @@ const {
     getSignatures,
     getSignatureById,
     getSignatureCount,
+    checkLogin,
 } = require("./db");
-
-const { hash, compare } = require("./bcrypt");
 
 const path = require("path");
 const cookieSession = require("cookie-session");
@@ -16,6 +15,7 @@ const port = 3000;
 
 //handlebars setup
 const hb = require("express-handlebars");
+const { error } = require("console");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 
 // Get petition
 app.get("/petition", (req, res) => {
-    if (req.session.signatureId) {
+    if (req.session.signatureID) {
         res.redirect("/thank-you");
         return;
     } else if (!req.session.userID) {
@@ -52,12 +52,14 @@ app.get("/petition", (req, res) => {
 
 //POST from petion
 app.post("/petition", (req, res) => {
-    const { first_name, last_name, signature } = req.body;
-    //console.log(first_name, last_name, signature);
+    const { signature } = req.body;
+    const userID = req.session.userID;
+    //console.log(userID);
+    //console.log(signature);
 
-    createSignatures(req.body)
+    createSignatures(req.body, userID)
         .then(({ id }) => {
-            req.session.signatureId = id;
+            req.session.signatureID = id;
             //console.log("erste id", id);
             res.redirect("/thank-you");
         })
@@ -69,14 +71,17 @@ app.post("/petition", (req, res) => {
 
 //Get thank you page
 app.get("/thank-you", (req, res) => {
-    const id = req.session.signatureId;
+    const id = req.session.signatureID;
+    const userID = req.session.userID;
+    console.log(userID);
+    console.log(id);
     //console.log("zweite id", id);
     if (!id) {
         res.redirect("/");
         return;
     }
-
-    Promise.all([getSignatureById(id), getSignatureCount()])
+    // TODO: getuserByID to see first and last name
+    Promise.all([getSignatureById(userID), getSignatureCount()])
         .then(([signature, headcount]) => {
             //console.log(headcount, signature);
             res.render("thank-you", {
@@ -113,6 +118,7 @@ app.post("/register", (req, res) => {
             console.log("[register]", error);
             if (error === "users_email_key") {
                 res.statusCode(400);
+                //TODO: Show error user!
                 res.send("Email already in use");
             }
         });
@@ -129,6 +135,23 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
     console.log(email, password);
+    if (!email || !password) {
+        return res.render("login", {
+            title: "login",
+            err: "Please fill out all fields",
+        });
+    }
+    checkLogin({ email, password }).then((foundUser) => {
+        if (!foundUser) {
+            return res.render("login", {
+                title: "login",
+                err: "WRONG INPUT",
+            });
+        }
+        //store user_id in session and redirect
+        req.session.userID = foundUser[0].id;
+        res.redirect("/");
+    });
 });
 
 // all singner page only with link

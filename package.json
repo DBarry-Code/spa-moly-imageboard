@@ -6,8 +6,10 @@
     "scripts": {
         "test": "jest",
         "start": "nodemon server.js --w",
-        "db-server": "sudo service postgresql start",
-        "db-work": "sudo -u barry psql -d petition_barry"
+        "db-server-start": "sudo service postgresql start",
+        "db-work": "sudo -u barry psql -d petition_barry",
+        "db-new": "psql -d petition_barry -f sql/setup.sql",
+        "db-server-stop": "sudo service postgresql stop"
     },
     "engines": {
         "node": "^16.11.0"
