@@ -95,10 +95,20 @@ app.get("/register", (req, res) => {
     });
 });
 
+app.post("/register", (req, res) => {
+    const { first_name, last_name, email, password } = req.body;
+    console.log(first_name, last_name, email, password);
+});
+
 app.get("/login", (req, res) => {
     res.render("login", {
         text: "Pleas Log-In",
     });
+});
+
+app.post("/login", (req, res) => {
+    const { email, password } = req.body;
+    console.log(email, password);
 });
 
 // all singner page only with link
