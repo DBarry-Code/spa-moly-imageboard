@@ -27,13 +27,12 @@ app.use(
     })
 );
 
-//Get fotm root
-
+//Get root
 app.get("/", (req, res) => {
     res.redirect("/petition");
 });
 
-// Get hompage
+// Get petition
 app.get("/petition", (req, res) => {
     if (req.session.signatureId) {
         res.redirect("/thank-you");
@@ -48,7 +47,7 @@ app.get("/petition", (req, res) => {
     }
 });
 
-//POST from hompage
+//POST from petion
 app.post("/petition", (req, res) => {
     const { first_name, last_name, signature } = req.body;
     //console.log(first_name, last_name, signature);
@@ -89,23 +88,27 @@ app.get("/thank-you", (req, res) => {
         });
 });
 
+//get register
 app.get("/register", (req, res) => {
     res.render("register", {
         text: "Please Register to use the site",
     });
 });
 
+// post from register
 app.post("/register", (req, res) => {
     const { first_name, last_name, email, password } = req.body;
     console.log(first_name, last_name, email, password);
 });
 
+// get from login
 app.get("/login", (req, res) => {
     res.render("login", {
-        text: "Pleas Log-In",
+        text: "Please Log-In",
     });
 });
 
+// post from login
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
     console.log(email, password);
