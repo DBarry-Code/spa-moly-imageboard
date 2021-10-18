@@ -27,19 +27,29 @@ app.use(
     })
 );
 
-// Get hompage
+//Get fotm root
+
 app.get("/", (req, res) => {
+    res.redirect("/petition");
+});
+
+// Get hompage
+app.get("/petition", (req, res) => {
     if (req.session.signatureId) {
         res.redirect("/thank-you");
         return;
+    } else if (!req.session.userId) {
+        res.redirect("/register");
+        return;
+    } else {
+        res.render("index", {
+            text: "Please sign to my 'NO PINEAPPLE ON PIZZA' movement",
+        });
     }
-    res.render("index", {
-        text: "Please sign to my 'NO PINEAPPLE ON PIZZA' movement",
-    });
 });
 
 //POST from hompage
-app.post("/", (req, res) => {
+app.post("/petition", (req, res) => {
     const { first_name, last_name, signature } = req.body;
     //console.log(first_name, last_name, signature);
 
@@ -77,6 +87,18 @@ app.get("/thank-you", (req, res) => {
             console.log("can't get signatures", error);
             res.sendStatus(500);
         });
+});
+
+app.get("/register", (req, res) => {
+    res.render("register", {
+        text: "Please Register to use the site",
+    });
+});
+
+app.get("/login", (req, res) => {
+    res.render("login", {
+        text: "Pleas Log-In",
+    });
 });
 
 // all singner page only with link

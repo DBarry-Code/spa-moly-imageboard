@@ -1,0 +1,50 @@
+<form action="/" method="POST">
+    <div class="formFirst">
+        <label for="first">First Name</label>
+        <input
+            type="text"
+            name="first_name"
+            placeholder="First name"
+            value="{{first}}"
+            required
+        />
+    </div>
+
+    <div class="formLast">
+        <label for="last">Last Name</label>
+        <input
+            type="text"
+            name="last_name"
+            placeholder="Last name"
+            value="{{last}}"
+            required
+        />
+    </div>
+
+    <div class="formEmail">
+        <label for="email">E-Mail</label>
+        <input
+            type="email"
+            name="email"
+            placeholder="E-M@il"
+            value="{{email}}"
+            required
+        />
+    </div>
+
+    <div class="formPassword">
+        <label for="password">Password</label>
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value="{{password}}"
+            required
+        />
+    </div>
+
+    <div class="formBtn">
+        <button class="btn" id="submit" type="submit">Register</button>
+    </div>
+
+</form>

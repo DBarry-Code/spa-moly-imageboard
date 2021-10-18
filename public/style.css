@@ -33,6 +33,14 @@ main {
     flex-direction: column;
 }
 
+.logoImg {
+    height: 300px;
+    width: 325px;
+    /* box-shadow: 10px 20px 15px silver; */
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
 .firstImg {
     height: 300px;
     width: 210px;
@@ -72,14 +80,12 @@ form {
 }
 
 .formFirst input,
-.formLast input {
+.formLast input,
+.formEmail input,
+.formPassword input {
     height: 35px;
-    width: 65%;
+    width: 100%;
     margin-bottom: 15px;
-}
-
-.formLast input {
-    margin-left: 2px;
 }
 
 .fromCanvas {
