@@ -1,4 +1,5 @@
 const spicedPg = require("spiced-pg");
+const { hash, compare } = require("./bcrypt");
 const { db_user, db_key, db_name } = require("./secrets.json");
 
 const db = spicedPg(`postgres:${db_user}:${db_key}@localhost:5432/${db_name}`);
@@ -30,9 +31,22 @@ function getSignatureById(id) {
         .then((result) => result.rows[0]);
 }
 
+function createUser({ first_name, last_name, email, password }) {
+    return hash(password).then((password_hash) => {
+        return db
+            .query(
+                `INSERT INTO users (first_name, last_name, email, password_hash) VALUES($1, $2, $3, $4)
+            RETURNING *`,
+                [first_name, last_name, email, password_hash]
+            )
+            .then((result) => result.rows[0]);
+    });
+}
+
 module.exports = {
     createSignatures,
     getSignatures,
     getSignatureById,
     getSignatureCount,
+    createUser,
 };

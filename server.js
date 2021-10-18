@@ -1,9 +1,12 @@
 const {
+    createUser,
     createSignatures,
     getSignatures,
     getSignatureById,
     getSignatureCount,
 } = require("./db");
+
+const { hash, compare } = require("./bcrypt");
 
 const path = require("path");
 const cookieSession = require("cookie-session");
@@ -37,7 +40,7 @@ app.get("/petition", (req, res) => {
     if (req.session.signatureId) {
         res.redirect("/thank-you");
         return;
-    } else if (!req.session.userId) {
+    } else if (!req.session.userID) {
         res.redirect("/register");
         return;
     } else {
@@ -52,7 +55,7 @@ app.post("/petition", (req, res) => {
     const { first_name, last_name, signature } = req.body;
     //console.log(first_name, last_name, signature);
 
-    createSignatures({ first_name, last_name, signature })
+    createSignatures(req.body)
         .then(({ id }) => {
             req.session.signatureId = id;
             //console.log("erste id", id);
@@ -98,7 +101,21 @@ app.get("/register", (req, res) => {
 // post from register
 app.post("/register", (req, res) => {
     const { first_name, last_name, email, password } = req.body;
-    console.log(first_name, last_name, email, password);
+    //console.log(req.body);
+    //TODO: FORM VALIDATION!
+
+    createUser(req.body)
+        .then(({ id }) => {
+            req.session.userID = id;
+            res.redirect("/");
+        })
+        .catch((error) => {
+            console.log("[register]", error);
+            if (error === "users_email_key") {
+                res.statusCode(400);
+                res.send("Email already in use");
+            }
+        });
 });
 
 // get from login
