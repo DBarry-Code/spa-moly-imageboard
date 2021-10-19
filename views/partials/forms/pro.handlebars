@@ -1,0 +1,26 @@
+<form action="/profile" method="POST">
+    <div class="formFirst">
+        <label for="age">Age</label>
+        <input type="number" name="age" placeholder="Age" value="{{age}}" />
+    </div>
+
+    <div class="formLast">
+        <label for="city">City</label>
+        <input type="text" name="city" placeholder="City" value="{{city}}" />
+    </div>
+
+    <div class="formEmail">
+        <label for="hompage">Homepage</label>
+        <input
+            type="url"
+            name="homepage"
+            placeholder="http://www.site.com"
+            value="{{homepage}}"
+        />
+    </div>
+
+    <div class="formBtn">
+        <button class="btn" id="submit" type="submit">Continue</button>
+    </div>
+
+</form>

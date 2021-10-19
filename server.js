@@ -5,6 +5,8 @@ const {
     getSignatureById,
     getSignatureCount,
     checkLogin,
+    getUserByID,
+    createProfile,
 } = require("./db");
 
 const path = require("path");
@@ -16,6 +18,7 @@ const port = 3000;
 //handlebars setup
 const hb = require("express-handlebars");
 const { error } = require("console");
+const res = require("express/lib/response");
 app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 
@@ -73,21 +76,24 @@ app.post("/petition", (req, res) => {
 app.get("/thank-you", (req, res) => {
     const id = req.session.signatureID;
     const userID = req.session.userID;
-    console.log(userID);
-    console.log(id);
-    //console.log("zweite id", id);
+
     if (!id) {
         res.redirect("/");
         return;
     }
-    // TODO: getuserByID to see first and last name
-    Promise.all([getSignatureById(userID), getSignatureCount()])
-        .then(([signature, headcount]) => {
-            //console.log(headcount, signature);
+
+    Promise.all([
+        getSignatureById(userID),
+        getSignatureCount(),
+        getUserByID(userID),
+    ])
+        .then(([signature, headcount, user]) => {
+            console.log(headcount, signature, user);
             res.render("thank-you", {
                 text: "thanks for signing, now you are a",
                 signature,
                 headcount,
+                user: user[0],
             });
         })
         .catch((error) => {
@@ -106,13 +112,18 @@ app.get("/register", (req, res) => {
 // post from register
 app.post("/register", (req, res) => {
     const { first_name, last_name, email, password } = req.body;
-    //console.log(req.body);
-    //TODO: FORM VALIDATION!
+
+    if (!first_name || !last_name || !email || !password) {
+        return res.render("register", {
+            text: "Please fill all inputs",
+            err: "WRONG INPUT",
+        });
+    }
 
     createUser(req.body)
         .then(({ id }) => {
             req.session.userID = id;
-            res.redirect("/");
+            res.redirect("/profile");
         })
         .catch((error) => {
             console.log("[register]", error);
@@ -121,6 +132,28 @@ app.post("/register", (req, res) => {
                 //TODO: Show error user!
                 res.send("Email already in use");
             }
+        });
+});
+
+//get profile
+app.get("/profile", (req, res) => {
+    res.render("profile", {
+        text: "Now please tell us just a little bit more.",
+    });
+});
+
+app.post("/profile", (req, res) => {
+    const { age, city, homepage } = req.body;
+    const userID = req.session.userID;
+    console.log(userID);
+
+    createProfile(req.body, userID)
+        .then((profile) => {
+            console.log(profile);
+            res.redirect("/");
+        })
+        .catch((error) => {
+            console.log("[POST profile]", error);
         });
 });
 
@@ -156,6 +189,7 @@ app.post("/login", (req, res) => {
 
 // all singner page only with link
 app.get("/signatures", (req, res) => {
+    //TODO: get a list users with signature
     getSignatures()
         .then((signatures) => {
             res.render("signatures", {

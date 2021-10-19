@@ -15,9 +15,26 @@ function createSignatures({ signature }, user_id) {
         )
         .then((result) => result.rows[0]);
 }
-
+/*
 function getSignatures() {
     return db.query("SELECT * FROM signatures").then((result) => result.rows);
+}
+*/
+
+function getSignatures() {
+    return db
+        .query(
+            `SELECT users.first_name, users.last_name,
+            user_profiles.age,
+            user_profiles.city,
+            user_profiles.homepage
+            FROM users
+            FULL JOIN user_profiles
+            ON users.id = user_profiles.user_id
+            JOIN signatures
+            ON users.id = signatures.user_id;`
+        )
+        .then((result) => result.rows);
 }
 
 function getSignatureCount() {
@@ -50,10 +67,13 @@ function createUser({ first_name, last_name, email, password }) {
     });
 }
 
-function getUsers(email) {
-    //console.log(email);
+function createProfile({ age, city, homepage }, user_id) {
+    console.log(user_id);
     return db
-        .query("SELECT * FROM users WEHRE email = $1", [email])
+        .query(
+            `INSERT INTO user_profiles(user_id, age, city, homepage) VALUES($1, $2, $3, $4) RETURNING *`,
+            [user_id, age, city, homepage]
+        )
         .then((result) => result.rows[0]);
 }
 
@@ -61,6 +81,13 @@ function getUserByEmail(email) {
     //console.log(email);
     return db
         .query(`SELECT * FROM users WHERE email = $1`, [email])
+        .then((result) => result.rows);
+}
+
+function getUserByID(userID) {
+    console.log(userID);
+    return db
+        .query(`SELECT * FROM users WHERE id = $1`, [userID])
         .then((result) => result.rows);
 }
 
@@ -96,6 +123,7 @@ module.exports = {
     getSignatureById,
     getSignatureCount,
     createUser,
-    getUsers,
     checkLogin,
+    getUserByID,
+    createProfile,
 };

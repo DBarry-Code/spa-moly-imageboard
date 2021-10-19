@@ -1,12 +1,13 @@
 {{> header }}
 <main>
     
-    <h2>{{signature.first_name}} {{signature.last_name}} {{text}}</h2>
+    <h2>{{user.first_name}} {{user.last_name}} {{text}}</h2>
+    
     <img class="secondImg" src="/assets/img/pizzaclub.jpg" alt="Pizza club">
 
-    {{#signature}}
-    <img class="showsig" src="{{signature}}" alt="{{signature.first_name}} {{signature.last_name}}">
-     {{/signature}}
+    
+    <img class="showsig" src="{{signature.signature}}" alt="{{user.first_name}} {{user.last_name}}">
+     
     
     <a class="signersLink" href="/signatures"><p>See all {{headcount}} signers</p></a>
     

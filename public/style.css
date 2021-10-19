@@ -105,14 +105,17 @@ form {
 .formBtn {
     margin-top: 5px;
     align-self: center;
+    cursor: pointer;
 }
 
 #submit {
+    cursor: pointer;
     margin-top: 15px;
     background-color: green;
 }
 
 #clear {
+    cursor: pointer;
     background-color: red;
 }
 

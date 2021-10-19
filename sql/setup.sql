@@ -1,3 +1,6 @@
+-- drop existing users table
+DROP TABLE IF EXISTS user_profiles;
+
 -- drop existing signatures table
 DROP TABLE IF EXISTS signatures;
 
@@ -13,6 +16,16 @@ CREATE TABLE users (
     password_hash   VARCHAR NOT NULL,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- create a new user_profiles table:
+CREATE TABLE user_profiles (
+    id          SERIAL PRIMARY KEY,
+    user_id     INTEGER NOT NULL UNIQUE REFERENCES users (id),
+    age         INTEGER,
+    city        VARCHAR(255) NOT NULL,
+    homepage    VARCHAR(255) NOT NULL
+);
+
 
 -- create a new signatures table:
 CREATE TABLE signatures (
