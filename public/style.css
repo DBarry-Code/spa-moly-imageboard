@@ -61,7 +61,7 @@ main {
 
 .thirdImg {
     height: 300px;
-    width: 250px;
+    width: 300px;
     margin-top: 25px;
     margin-bottom: 25px;
 }
@@ -91,6 +91,10 @@ form {
 .fromCanvas {
     display: flex;
     flex-direction: column;
+}
+
+.mbText {
+    margin-bottom: 15px;
 }
 
 #signature-pad {

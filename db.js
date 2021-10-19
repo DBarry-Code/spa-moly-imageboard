@@ -37,6 +37,25 @@ function getSignatures() {
         .then((result) => result.rows);
 }
 
+function getSignatureByCity(city) {
+    console.log(city);
+    return db
+        .query(
+            `SELECT users.first_name, users.last_name,
+            user_profiles.age,
+            user_profiles.city,
+            user_profiles.homepage
+            FROM users
+            FULL JOIN user_profiles
+            ON users.id = user_profiles.user_id
+            JOIN signatures
+            ON users.id = signatures.user_id
+            WHERE user_profiles.city ILIKE $1`,
+            [city]
+        )
+        .then((result) => result.rows);
+}
+
 function getSignatureCount() {
     return db
         .query("SELECT COUNT(id) FROM signatures")
@@ -68,11 +87,11 @@ function createUser({ first_name, last_name, email, password }) {
 }
 
 function createProfile({ age, city, homepage }, user_id) {
-    console.log(user_id);
+    //console.log(user_id);
     return db
         .query(
             `INSERT INTO user_profiles(user_id, age, city, homepage) VALUES($1, $2, $3, $4) RETURNING *`,
-            [user_id, age, city, homepage]
+            [user_id, +age, city, homepage]
         )
         .then((result) => result.rows[0]);
 }
@@ -85,7 +104,7 @@ function getUserByEmail(email) {
 }
 
 function getUserByID(userID) {
-    console.log(userID);
+    //console.log(userID);
     return db
         .query(`SELECT * FROM users WHERE id = $1`, [userID])
         .then((result) => result.rows);
@@ -126,4 +145,5 @@ module.exports = {
     checkLogin,
     getUserByID,
     createProfile,
+    getSignatureByCity,
 };

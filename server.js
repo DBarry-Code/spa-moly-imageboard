@@ -7,6 +7,7 @@ const {
     checkLogin,
     getUserByID,
     createProfile,
+    getSignatureByCity,
 } = require("./db");
 
 const path = require("path");
@@ -202,6 +203,23 @@ app.get("/signatures", (req, res) => {
         .catch((error) => {
             console.log("can't get signatures", error);
             res.statusCode(500);
+        });
+});
+
+app.get("/signatures/:city", (req, res) => {
+    const { city } = req.params;
+
+    getSignatureByCity(city)
+        .then((signatures) => {
+            res.render("signatureCity", {
+                text: `There are ${signatures.length} sigeners from ${city}`,
+                signatures,
+                city,
+            });
+            console.log(signatures);
+        })
+        .catch((error) => {
+            console.log("[GET City]", error);
         });
 });
 
