@@ -9,6 +9,7 @@ const {
     createProfile,
     getSignatureByCity,
     getUserProfil,
+    deleteSiganture,
 } = require("./db");
 
 const path = require("path");
@@ -37,17 +38,7 @@ app.use(
 
 //Get root
 app.get("/", (req, res) => {
-    const { userID } = req.session;
-
-    if (!userID) {
-        res.redirect("/petition");
-        return;
-    } else {
-        getSignatureById(userID).then(({ id }) => {
-            req.session.signatureID = id;
-            res.redirect("/thank-you");
-        });
-    }
+    res.redirect("/petition");
 });
 
 // Get petition
@@ -58,7 +49,7 @@ app.get("/petition", (req, res) => {
     } else if (!req.session.userID) {
         res.redirect("/register");
         return;
-    } else {
+    } else if (!req.session.signatureID || req.session.signatureID === 0) {
         res.render("index", {
             text: "Please sign to my 'NO PINEAPPLE ON PIZZA' movement",
         });
@@ -244,6 +235,20 @@ app.get("/signatures", (req, res) => {
         .catch((error) => {
             console.log("can't get signatures", error);
             res.statusCode(500);
+        });
+});
+
+app.post("/unsign", (req, res) => {
+    const { userID } = req.session;
+
+    deleteSiganture(userID)
+        .then(() => {
+            req.session.signatureID = 0;
+            res.redirect("/petition");
+        })
+        .catch((error) => {
+            console.log("ungsig error", error);
+            res.sendStatus(500);
         });
 });
 

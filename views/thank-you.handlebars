@@ -11,6 +11,10 @@
     
     <a class="signersLink" href="/signatures"><p>See all {{headcount}} signers</p></a>
     <a class="signersLink" href="/profile/edit"><p>Edit your Profile </p></a>
+    <form action="/unsign" method="POST" id="unsign">
+    <button type="submit" class="action"><p>Unsign petition</p></button>
+</form>
     
 </main>
+<script src="/unsign.js"></script>
 {{> footer }}

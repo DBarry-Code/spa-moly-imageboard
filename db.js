@@ -81,13 +81,7 @@ function getSignatureCount() {
         .query("SELECT COUNT(id) FROM signatures")
         .then((result) => result.rows[0].count);
 }
-/*
-function getSignatureById(id) {
-    return db
-        .query("SELECT * FROM signatures WHERE id = $1", [id])
-        .then((result) => result.rows[0]);
-}
-*/
+
 function getSignatureById(id) {
     return db
         .query("SELECT * FROM signatures WHERE user_id = $1", [id])
@@ -130,6 +124,12 @@ function getUserByID(userID) {
         .then((result) => result.rows);
 }
 
+function deleteSiganture(id) {
+    return db
+        .query(`DELETE FROM signatures WHERE signatures.user_id = $1`, [id])
+        .then((result) => result.rows);
+}
+
 //! node problems: can't make a modul "node --trace-warnings"
 
 function checkLogin({ email, password }) {
@@ -167,4 +167,5 @@ module.exports = {
     createProfile,
     getSignatureByCity,
     getUserProfil,
+    deleteSiganture,
 };
