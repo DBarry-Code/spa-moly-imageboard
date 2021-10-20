@@ -8,6 +8,7 @@ const {
     getUserByID,
     createProfile,
     getSignatureByCity,
+    getUserProfil,
 } = require("./db");
 
 const path = require("path");
@@ -36,7 +37,17 @@ app.use(
 
 //Get root
 app.get("/", (req, res) => {
-    res.redirect("/petition");
+    const { userID } = req.session;
+
+    if (!userID) {
+        res.redirect("/petition");
+        return;
+    } else {
+        getSignatureById(userID).then(({ id }) => {
+            req.session.signatureID = id;
+            res.redirect("/thank-you");
+        });
+    }
 });
 
 // Get petition
@@ -89,7 +100,7 @@ app.get("/thank-you", (req, res) => {
         getUserByID(userID),
     ])
         .then(([signature, headcount, user]) => {
-            console.log(headcount, signature, user);
+            //console.log(headcount, signature, user);
             res.render("thank-you", {
                 text: "thanks for signing, now you are a",
                 signature,
@@ -138,6 +149,13 @@ app.post("/register", (req, res) => {
 
 //get profile
 app.get("/profile", (req, res) => {
+    const { userID } = req.session;
+
+    if (!userID) {
+        res.redirect("/");
+        return;
+    }
+
     res.render("profile", {
         text: "Now please tell us just a little bit more.",
     });
@@ -188,9 +206,32 @@ app.post("/login", (req, res) => {
     });
 });
 
+app.get("/profile/edit", (req, res) => {
+    const { userID } = req.session;
+
+    if (!userID) {
+        res.redirect("/");
+        return;
+    }
+
+    getUserProfil(userID).then((profile) => {
+        //console.log(profile);
+        res.render("edit", {
+            text: "Edit your profile",
+            ...profile,
+        });
+    });
+});
+
 // all singner page only with link
 app.get("/signatures", (req, res) => {
-    //TODO: get a list users with signature
+    const { signatureID } = req.session;
+
+    if (!signatureID) {
+        res.redirect("/");
+        return;
+    }
+
     getSignatures()
         .then((signatures) => {
             res.render("signatures", {
@@ -208,6 +249,12 @@ app.get("/signatures", (req, res) => {
 
 app.get("/signatures/:city", (req, res) => {
     const { city } = req.params;
+    const { signatureID } = req.session;
+
+    if (!signatureID) {
+        res.redirect("/");
+        return;
+    }
 
     getSignatureByCity(city)
         .then((signatures) => {
@@ -216,7 +263,7 @@ app.get("/signatures/:city", (req, res) => {
                 signatures,
                 city,
             });
-            console.log(signatures);
+            //console.log(signatures);
         })
         .catch((error) => {
             console.log("[GET City]", error);

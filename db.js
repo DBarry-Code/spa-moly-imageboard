@@ -38,7 +38,7 @@ function getSignatures() {
 }
 
 function getSignatureByCity(city) {
-    console.log(city);
+    //console.log(city);
     return db
         .query(
             `SELECT users.first_name, users.last_name,
@@ -54,6 +54,26 @@ function getSignatureByCity(city) {
             [city]
         )
         .then((result) => result.rows);
+}
+
+function getUserProfil(id) {
+    return db
+        .query(
+            `SELECT
+            users.first_name,
+            users.last_name,
+            users.email,
+            user_profiles.age,
+            user_profiles.city,
+            user_profiles.homepage
+            FROM
+            users
+            FULL JOIN user_profiles ON users.id = user_profiles.user_id
+            WHERE
+            user_id = $1;`,
+            [id]
+        )
+        .then((result) => result.rows[0]);
 }
 
 function getSignatureCount() {
@@ -146,4 +166,5 @@ module.exports = {
     getUserByID,
     createProfile,
     getSignatureByCity,
+    getUserProfil,
 };

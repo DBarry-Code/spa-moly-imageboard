@@ -1,0 +1,70 @@
+<form action="/profile/edit" method="POST">
+
+    <div class="formFirst">
+        <label for="first">First Name</label>
+        <input
+            type="text"
+            name="first_name"
+            placeholder="First name"
+            value="{{first_name}}"
+            required
+        />
+    </div>
+
+    <div class="formLast">
+        <label for="last">Last Name</label>
+        <input
+            type="text"
+            name="last_name"
+            placeholder="Last name"
+            value="{{last_name}}"
+            required
+        />
+    </div>
+
+    <div class="formEmail">
+        <label for="email">E-Mail</label>
+        <input
+            type="email"
+            name="email"
+            placeholder="E-M@il"
+            value="{{email}}"
+            required
+        />
+    </div>
+
+    <div class="formPassword">
+        <label for="password">Password</label>
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value="{{password}}"
+        />
+    </div>
+
+    <div class="formFirst">
+        <label for="age">Age</label>
+        <input type="number" name="age" placeholder="Age" value="{{age}}" />
+    </div>
+
+    <div class="formLast">
+        <label for="city">City</label>
+        <input type="text" name="city" placeholder="City" value="{{city}}" />
+    </div>
+
+    <div class="formEmail">
+        <label for="hompage">Homepage</label>
+        <input
+            type="url"
+            name="homepage"
+            placeholder="http://www.site.com"
+            value="{{homepage}}"
+        />
+    </div>
+
+    <div class="formBtn">
+        <button class="btn" id="submit" type="submit">Update</button>
+    </div>
+
+</form>

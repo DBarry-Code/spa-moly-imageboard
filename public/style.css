@@ -66,6 +66,13 @@ main {
     margin-bottom: 25px;
 }
 
+.clubImg {
+    height: 200px;
+    width: 220px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 .showsig {
     height: 100px;
     width: 500px;
