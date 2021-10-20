@@ -53,7 +53,7 @@ main {
 
 .secondImg {
     height: 400px;
-    width: 300px;
+    width: 350px;
     box-shadow: 10px 20px 15px silver;
     margin-top: 25px;
     margin-bottom: 25px;
@@ -140,17 +140,22 @@ form {
     font-size: 1rem;
     letter-spacing: 0.15rem;
 }
-
+.logout,
 .action {
     background: none;
     border: none;
     font-family: Merienda;
     font-size: 25px;
-    margin-top: -15px;
+    margin-top: -20px;
     text-decoration: underline;
     cursor: pointer;
 }
 
+.fromAction {
+    margin-top: -20px;
+}
+
+.logout:hover,
 .singerLink:hover,
 .signersLink:hover,
 .action:hover {

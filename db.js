@@ -15,11 +15,12 @@ function createSignatures({ signature }, user_id) {
         )
         .then((result) => result.rows[0]);
 }
-/*
-function getSignatures() {
-    return db.query("SELECT * FROM signatures").then((result) => result.rows);
+
+function getSignaturesIdBYUserID(id) {
+    return db
+        .query("SELECT id FROM signatures WHERE user_id = $1", [id])
+        .then((result) => result.rows[0]);
 }
-*/
 
 function getSignatures() {
     return db
@@ -143,6 +144,25 @@ function updateProfile(user_id, { age, city, homepage }) {
         .then((result) => result.rows[0]);
 }
 
+function updateUser({ user_id, first_name, last_name, email, password }) {
+    if (!password || password == "" || password == undefined) {
+        return db.query(
+            `UPDATE users
+            SET first_name = $2, last_name = $3, email = $4
+            WHERE id = $1`,
+            [user_id, first_name, last_name, email]
+        );
+    } else
+        return hash(password).then((hashedPassword) => {
+            return db.query(
+                `UPDATE users
+            SET first_name = $2, last_name = $3, email = $4, password = $5
+            WHERE id = $1`,
+                [user_id, first_name, last_name, email, hashedPassword]
+            );
+        });
+}
+
 //! node problems: can't make a modul "node --trace-warnings"
 
 function checkLogin({ email, password }) {
@@ -182,4 +202,5 @@ module.exports = {
     getUserProfil,
     deleteSiganture,
     updateProfile,
+    getSignaturesIdBYUserID,
 };

@@ -11,6 +11,7 @@ const {
     getUserProfil,
     deleteSiganture,
     updateProfile,
+    getSignaturesIdBYUserID,
 } = require("./db");
 
 const path = require("path");
@@ -39,11 +40,29 @@ app.use(
 
 //Get root
 app.get("/", (req, res) => {
-    res.redirect("/petition");
+    const { userID } = req.session;
+    console.log("root userID", userID);
+
+    if (!req.session.userID || !req.session.signatureID) {
+        res.redirect("/petition");
+    }
+
+    //! can't set signauture Cookie and redirect to /thank-you?
+    getSignaturesIdBYUserID(userID)
+        .then((id) => {
+            console.log("sigi id db", id);
+            req.session.signatureID = id;
+            res.redirect("/thank-you");
+            console.log(req.session.signatureID);
+        })
+        .catch((error) => {
+            console.log("Get signaturId error", error);
+        });
 });
 
 // Get petition
 app.get("/petition", (req, res) => {
+    console.log("petition signaturID check:", req.session.signatureID);
     if (req.session.signatureID) {
         res.redirect("/thank-you");
         return;
@@ -60,8 +79,10 @@ app.get("/petition", (req, res) => {
 //POST from petion
 app.post("/petition", (req, res) => {
     const { signature } = req.body;
+
     const userID = req.session.userID;
     //console.log(userID);
+
     //console.log(signature);
 
     createSignatures(req.body, userID)
@@ -178,6 +199,7 @@ app.get("/login", (req, res) => {
 // post from login
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
+
     console.log(email, password);
     if (!email || !password) {
         return res.render("login", {
@@ -233,6 +255,29 @@ app.post("/profile/edit", (req, res) => {
                 });
             });
         });
+    // change to update all
+    /*
+    Promise.all([
+        upsertProfile(userID, {
+            ...req.body,
+        }),
+        updateUser(userID, { ...req.body }),
+    ])
+        .then(() => {
+            res.redirect("/profile/edit");
+        })
+        .catch((error) => {
+            console.log("POST - /profile/edit error", error);
+            getUserProfil(userID).then((profile) => {
+                //console.log(profile);
+                res.render("edit", {
+                    text: "Edit your profile",
+                    ...profile,
+                    error: "Check your Input",
+                });
+            });
+        });
+        */
 });
 
 // all singner page only with link
@@ -294,6 +339,12 @@ app.get("/signatures/:city", (req, res) => {
         .catch((error) => {
             console.log("[GET City]", error);
         });
+});
+
+app.post("/logout", (req, res) => {
+    req.session.userID = null;
+    req.session.signatureID = null;
+    return res.redirect("/");
 });
 
 app.listen(port, () => {
