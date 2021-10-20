@@ -2,6 +2,10 @@
 
 <main>
     <img class="clubImg" src="/assets/img/pizzaclub_sm.jpg" alt="Pizza club">
+    <p>{{text}}</p>
+    {{#if error}}
+    <p>{{error}} </p>
+    {{/if}}
     {{>forms/proedit}}
 </main>
 

@@ -130,6 +130,19 @@ function deleteSiganture(id) {
         .then((result) => result.rows);
 }
 
+function updateProfile(user_id, { age, city, homepage }) {
+    console.log(user_id);
+    return db
+        .query(
+            `INSERT INTO user_profiles (user_id, age, city, homepage)
+            VALUES ($1, $2, $3, $4)
+            ON CONFLICT (user_id)
+            DO UPDATE SET age = $2, city = $3, homepage = $4`,
+            [user_id, age ? age : null, city, homepage]
+        )
+        .then((result) => result.rows[0]);
+}
+
 //! node problems: can't make a modul "node --trace-warnings"
 
 function checkLogin({ email, password }) {
@@ -168,4 +181,5 @@ module.exports = {
     getSignatureByCity,
     getUserProfil,
     deleteSiganture,
+    updateProfile,
 };

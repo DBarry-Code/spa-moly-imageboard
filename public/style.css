@@ -141,8 +141,28 @@ form {
     letter-spacing: 0.15rem;
 }
 
+.action {
+    background: none;
+    border: none;
+    font-family: Merienda;
+    font-size: 25px;
+    margin-top: -15px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.singerLink:hover,
+.signersLink:hover,
+.action:hover {
+    color: slateblue;
+}
+
 .signersLink {
     font-size: 25px;
+    color: black;
+    margin-bottom: 5px;
+}
+.singerLink {
     color: black;
 }
 

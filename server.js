@@ -10,6 +10,7 @@ const {
     getSignatureByCity,
     getUserProfil,
     deleteSiganture,
+    updateProfile,
 } = require("./db");
 
 const path = require("path");
@@ -212,6 +213,26 @@ app.get("/profile/edit", (req, res) => {
             ...profile,
         });
     });
+});
+
+app.post("/profile/edit", (req, res) => {
+    const { userID } = req.session;
+
+    updateProfile(userID, { ...req.body })
+        .then(() => {
+            res.redirect("/profile/edit");
+        })
+        .catch((error) => {
+            console.log("POST - /profile/edit error", error);
+            getUserProfil(userID).then((profile) => {
+                //console.log(profile);
+                res.render("edit", {
+                    text: "Edit your profile",
+                    ...profile,
+                    error: "Check your Input",
+                });
+            });
+        });
 });
 
 // all singner page only with link
