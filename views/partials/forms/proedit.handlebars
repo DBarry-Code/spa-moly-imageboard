@@ -71,10 +71,10 @@
 
     <div id="message">
         <p>Password must contain the following:</p>
-        <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-        <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-        <p id="number" class="invalid">A <b>number</b></p>
-        <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+        <p id="letter" class="invalid">a lowercase letter</p>
+        <p id="capital" class="invalid">a capital (uppercase) letter</p>
+        <p id="number" class="invalid">a number</p>
+        <p id="length" class="invalid">minimum 8 - 15 Max characters</p>
     </div>
 
     <div class="formPassword">
@@ -82,6 +82,7 @@
         <input
             id="psw"
             type="password"
+            pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}$"
             name="password"
             title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
             placeholder="Password"
