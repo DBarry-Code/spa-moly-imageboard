@@ -6,6 +6,7 @@
     "scripts": {
         "test": "jest",
         "start": "node server.js",
+        "dev": "nodemon server.js --w",
         "db-server-start": "sudo service postgresql start",
         "db-work": "sudo -u barry psql -d petition_barry",
         "db-new": "psql -d petition_barry -f sql/setup.sql",

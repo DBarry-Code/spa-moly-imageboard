@@ -22,12 +22,13 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
-let sessionSecret;
+// hidde Key: for deploy!
+let SESSION_SECRET;
 
 if (process.env.NODE_ENV == "production") {
-    sessionSecret = process.env.SESSION_SECRET;
+    SESSION_SECRET = process.env.SESSION_SECRET;
 } else {
-    sessionSecret = require("./secrets.json").SESSION_SECRET;
+    SESSION_SECRET = require("./secrets.json").SESSION_SECRET;
 }
 
 //handlebars setup
@@ -42,7 +43,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(
     cookieSession({
-        secret: `${secretSession}`,
+        secret: `${SESSION_SECRET}`,
         maxAge: 1000 * 60 * 60 * 24 * 14,
         sameSite: true,
     })
