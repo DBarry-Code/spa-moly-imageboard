@@ -1,13 +1,5 @@
 const spicedPg = require("spiced-pg");
 const bcrypt = require("bcryptjs");
-
-//const { db_user, db_key, db_name } = require("./secrets.json");
-
-// const db = spicedPg(
-//     process.env.DATABASE_URL ||
-//         `postgres:${db_user}:${db_key}@localhost:5432/${db_name}`
-// );
-
 const db = spicedPg(getDatabaseURL());
 
 function getDatabaseURL() {
@@ -166,12 +158,12 @@ function updateUser(user_id, { first_name, last_name, email, password }) {
             [user_id, first_name, last_name, email]
         );
     } else
-        return hash(password).then((hashedPassword) => {
+        return hash(password).then((password_hash) => {
             return db.query(
                 `UPDATE users
-            SET first_name = $2, last_name = $3, email = $4, password = $5
+            SET first_name = $2, last_name = $3, email = $4, password_hash = $5
             WHERE id = $1`,
-                [user_id, first_name, last_name, email, hashedPassword]
+                [user_id, first_name, last_name, email, password_hash]
             );
         });
 }
