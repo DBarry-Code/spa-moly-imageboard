@@ -12,7 +12,6 @@ const {
     deleteSiganture,
     updateProfile,
     updateUser,
-    getSignaturesIdBYUserID,
 } = require("./db");
 
 const { requireLoggedUser, requireSignature } = require("./middlewares");
@@ -21,7 +20,15 @@ const path = require("path");
 const cookieSession = require("cookie-session");
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+let sessionSecret;
+
+if (process.env.NODE_ENV == "production") {
+    sessionSecret = process.env.SESSION_SECRET;
+} else {
+    sessionSecret = require("./secrets.json").SESSION_SECRET;
+}
 
 //handlebars setup
 const hb = require("express-handlebars");
@@ -35,7 +42,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(
     cookieSession({
-        secret: `I'm always angry.`,
+        secret: `${secretSession}`,
         maxAge: 1000 * 60 * 60 * 24 * 14,
         sameSite: true,
     })
@@ -68,7 +75,6 @@ app.post("/petition", requireLoggedUser, (req, res) => {
 
     createSignatures(req.body, user_id)
         .then(() => {
-            //console.log("erste id", id);
             res.redirect("/thank-you");
         })
         .catch((error) => {
@@ -87,7 +93,6 @@ app.get("/thank-you", requireLoggedUser, requireSignature, (req, res) => {
         getUserByID(user_id),
     ])
         .then(([signature, headcount, user]) => {
-            //console.log(headcount, signature, user);
             res.render("thank-you", {
                 text: "thanks for signing, now you are a",
                 signature,
@@ -144,11 +149,9 @@ app.get("/profile", requireLoggedUser, (req, res) => {
 app.post("/profile", requireLoggedUser, (req, res) => {
     const { age, city, homepage } = req.body;
     const user_id = req.session.user_id;
-    console.log(user_id);
 
     createProfile(req.body, user_id)
         .then((profile) => {
-            console.log(profile);
             res.redirect("/");
         })
         .catch((error) => {
@@ -175,13 +178,12 @@ app.post("/login", (req, res) => {
     }
     checkLogin({ email, password }).then((foundUser) => {
         if (!foundUser) {
-            console.log(foundUser);
             return res.render("login", {
                 title: "login",
                 err: "WRONG INPUT",
             });
         }
-        //store user_id in session and redirect
+
         req.session.user_id = foundUser[0].id;
         res.redirect("/thank-you");
     });
@@ -191,7 +193,6 @@ app.get("/profile/edit", requireLoggedUser, (req, res) => {
     const { user_id } = req.session;
 
     getUserProfil(user_id).then((profile) => {
-        //console.log(profile);
         res.render("edit", {
             text: "Edit your profile",
             ...profile,
@@ -214,7 +215,6 @@ app.post("/profile/edit", requireLoggedUser, (req, res) => {
         .catch((error) => {
             console.log("POST - /profile/edit error", error);
             getUserProfil(user_id).then((profile) => {
-                //console.log(profile);
                 res.render("edit", {
                     text: "Edit your profile",
                     ...profile,
@@ -233,7 +233,6 @@ app.get("/signatures", requireLoggedUser, requireSignature, (req, res) => {
                 signatures,
                 headcount: `${signatures.length} signers all ready`,
             });
-            //console.log(signatures);
         })
         .catch((error) => {
             console.log("can't get signatures", error);
@@ -268,7 +267,6 @@ app.get(
                     signatures,
                     city,
                 });
-                //console.log(signatures);
             })
             .catch((error) => {
                 console.log("[GET City]", error);

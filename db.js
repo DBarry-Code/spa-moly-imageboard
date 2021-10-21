@@ -3,7 +3,10 @@ const bcrypt = require("bcryptjs");
 
 const { db_user, db_key, db_name } = require("./secrets.json");
 
-const db = spicedPg(`postgres:${db_user}:${db_key}@localhost:5432/${db_name}`);
+const db = spicedPg(
+    process.env.DATABASE_URL ||
+        `postgres:${db_user}:${db_key}@localhost:5432/${db_name}`
+);
 
 function createSignatures({ signature }, user_id) {
     return db
