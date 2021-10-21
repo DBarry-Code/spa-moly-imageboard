@@ -11,8 +11,11 @@ const {
     getUserProfil,
     deleteSiganture,
     updateProfile,
+    updateUser,
     getSignaturesIdBYUserID,
 } = require("./db");
+
+const { requireLoggedUser, requireSignature } = require("./middlewares");
 
 const path = require("path");
 const cookieSession = require("cookie-session");
@@ -39,55 +42,32 @@ app.use(
 );
 
 //Get root
-app.get("/", (req, res) => {
-    const { userID } = req.session;
-    console.log("root userID", userID);
-
-    if (!req.session.userID || !req.session.signatureID) {
+app.get("/", requireLoggedUser, (req, res) => {
+    if (req.session.user_id) {
         res.redirect("/petition");
     }
-
-    //! can't set signauture Cookie and redirect to /thank-you?
-    getSignaturesIdBYUserID(userID)
-        .then((id) => {
-            console.log("sigi id db", id);
-            req.session.signatureID = id;
-            res.redirect("/thank-you");
-            console.log(req.session.signatureID);
-        })
-        .catch((error) => {
-            console.log("Get signaturId error", error);
-        });
 });
 
 // Get petition
-app.get("/petition", (req, res) => {
-    console.log("petition signaturID check:", req.session.signatureID);
-    if (req.session.signatureID) {
-        res.redirect("/thank-you");
-        return;
-    } else if (!req.session.userID) {
-        res.redirect("/register");
-        return;
-    } else if (!req.session.signatureID || req.session.signatureID === 0) {
+app.get("/petition", requireLoggedUser, (req, res) => {
+    const { user_id } = req.session;
+
+    getSignatureById(user_id).then((signature) => {
+        if (signature) {
+            res.redirect("/thank-you");
+        }
         res.render("index", {
             text: "Please sign to my 'NO PINEAPPLE ON PIZZA' movement",
         });
-    }
+    });
 });
 
 //POST from petion
-app.post("/petition", (req, res) => {
-    const { signature } = req.body;
+app.post("/petition", requireLoggedUser, (req, res) => {
+    const user_id = req.session.user_id;
 
-    const userID = req.session.userID;
-    //console.log(userID);
-
-    //console.log(signature);
-
-    createSignatures(req.body, userID)
-        .then(({ id }) => {
-            req.session.signatureID = id;
+    createSignatures(req.body, user_id)
+        .then(() => {
             //console.log("erste id", id);
             res.redirect("/thank-you");
         })
@@ -98,19 +78,13 @@ app.post("/petition", (req, res) => {
 });
 
 //Get thank you page
-app.get("/thank-you", (req, res) => {
-    const id = req.session.signatureID;
-    const userID = req.session.userID;
-
-    if (!id) {
-        res.redirect("/");
-        return;
-    }
+app.get("/thank-you", requireLoggedUser, requireSignature, (req, res) => {
+    const user_id = req.session.user_id;
 
     Promise.all([
-        getSignatureById(userID),
+        getSignatureById(user_id),
         getSignatureCount(),
-        getUserByID(userID),
+        getUserByID(user_id),
     ])
         .then(([signature, headcount, user]) => {
             //console.log(headcount, signature, user);
@@ -147,7 +121,7 @@ app.post("/register", (req, res) => {
 
     createUser(req.body)
         .then(({ id }) => {
-            req.session.userID = id;
+            req.session.user_id = id;
             res.redirect("/profile");
         })
         .catch((error) => {
@@ -161,25 +135,18 @@ app.post("/register", (req, res) => {
 });
 
 //get profile
-app.get("/profile", (req, res) => {
-    const { userID } = req.session;
-
-    if (!userID) {
-        res.redirect("/");
-        return;
-    }
-
+app.get("/profile", requireLoggedUser, (req, res) => {
     res.render("profile", {
         text: "Now please tell us just a little bit more.",
     });
 });
 
-app.post("/profile", (req, res) => {
+app.post("/profile", requireLoggedUser, (req, res) => {
     const { age, city, homepage } = req.body;
-    const userID = req.session.userID;
-    console.log(userID);
+    const user_id = req.session.user_id;
+    console.log(user_id);
 
-    createProfile(req.body, userID)
+    createProfile(req.body, user_id)
         .then((profile) => {
             console.log(profile);
             res.redirect("/");
@@ -200,7 +167,6 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
     const { email, password } = req.body;
 
-    console.log(email, password);
     if (!email || !password) {
         return res.render("login", {
             title: "login",
@@ -209,26 +175,22 @@ app.post("/login", (req, res) => {
     }
     checkLogin({ email, password }).then((foundUser) => {
         if (!foundUser) {
+            console.log(foundUser);
             return res.render("login", {
                 title: "login",
                 err: "WRONG INPUT",
             });
         }
         //store user_id in session and redirect
-        req.session.userID = foundUser[0].id;
-        res.redirect("/");
+        req.session.user_id = foundUser[0].id;
+        res.redirect("/thank-you");
     });
 });
 
-app.get("/profile/edit", (req, res) => {
-    const { userID } = req.session;
+app.get("/profile/edit", requireLoggedUser, (req, res) => {
+    const { user_id } = req.session;
 
-    if (!userID) {
-        res.redirect("/");
-        return;
-    }
-
-    getUserProfil(userID).then((profile) => {
+    getUserProfil(user_id).then((profile) => {
         //console.log(profile);
         res.render("edit", {
             text: "Edit your profile",
@@ -237,38 +199,21 @@ app.get("/profile/edit", (req, res) => {
     });
 });
 
-app.post("/profile/edit", (req, res) => {
-    const { userID } = req.session;
+app.post("/profile/edit", requireLoggedUser, (req, res) => {
+    const { user_id } = req.session;
 
-    updateProfile(userID, { ...req.body })
-        .then(() => {
-            res.redirect("/profile/edit");
-        })
-        .catch((error) => {
-            console.log("POST - /profile/edit error", error);
-            getUserProfil(userID).then((profile) => {
-                //console.log(profile);
-                res.render("edit", {
-                    text: "Edit your profile",
-                    ...profile,
-                    error: "Check your Input",
-                });
-            });
-        });
-    // change to update all
-    /*
     Promise.all([
-        upsertProfile(userID, {
+        updateProfile(user_id, {
             ...req.body,
         }),
-        updateUser(userID, { ...req.body }),
+        updateUser(user_id, { ...req.body }),
     ])
         .then(() => {
             res.redirect("/profile/edit");
         })
         .catch((error) => {
             console.log("POST - /profile/edit error", error);
-            getUserProfil(userID).then((profile) => {
+            getUserProfil(user_id).then((profile) => {
                 //console.log(profile);
                 res.render("edit", {
                     text: "Edit your profile",
@@ -277,18 +222,10 @@ app.post("/profile/edit", (req, res) => {
                 });
             });
         });
-        */
 });
 
 // all singner page only with link
-app.get("/signatures", (req, res) => {
-    const { signatureID } = req.session;
-
-    if (!signatureID) {
-        res.redirect("/");
-        return;
-    }
-
+app.get("/signatures", requireLoggedUser, requireSignature, (req, res) => {
     getSignatures()
         .then((signatures) => {
             res.render("signatures", {
@@ -304,12 +241,11 @@ app.get("/signatures", (req, res) => {
         });
 });
 
-app.post("/unsign", (req, res) => {
-    const { userID } = req.session;
+app.post("/unsign", requireLoggedUser, requireSignature, (req, res) => {
+    const { user_id } = req.session;
 
-    deleteSiganture(userID)
+    deleteSiganture(user_id)
         .then(() => {
-            req.session.signatureID = 0;
             res.redirect("/petition");
         })
         .catch((error) => {
@@ -318,32 +254,30 @@ app.post("/unsign", (req, res) => {
         });
 });
 
-app.get("/signatures/:city", (req, res) => {
-    const { city } = req.params;
-    const { signatureID } = req.session;
+app.get(
+    "/signatures/:city",
+    requireLoggedUser,
+    requireSignature,
+    (req, res) => {
+        const { city } = req.params;
 
-    if (!signatureID) {
-        res.redirect("/");
-        return;
-    }
-
-    getSignatureByCity(city)
-        .then((signatures) => {
-            res.render("signatureCity", {
-                text: `There are ${signatures.length} sigeners from ${city}`,
-                signatures,
-                city,
+        getSignatureByCity(city)
+            .then((signatures) => {
+                res.render("signatureCity", {
+                    text: `There are ${signatures.length} sigeners from ${city}`,
+                    signatures,
+                    city,
+                });
+                //console.log(signatures);
+            })
+            .catch((error) => {
+                console.log("[GET City]", error);
             });
-            //console.log(signatures);
-        })
-        .catch((error) => {
-            console.log("[GET City]", error);
-        });
-});
+    }
+);
 
-app.post("/logout", (req, res) => {
-    req.session.userID = null;
-    req.session.signatureID = null;
+app.post("/logout", requireLoggedUser, (req, res) => {
+    req.session.user_id = null;
     return res.redirect("/");
 });
 

@@ -144,7 +144,7 @@ function updateProfile(user_id, { age, city, homepage }) {
         .then((result) => result.rows[0]);
 }
 
-function updateUser({ user_id, first_name, last_name, email, password }) {
+function updateUser(user_id, { first_name, last_name, email, password }) {
     if (!password || password == "" || password == undefined) {
         return db.query(
             `UPDATE users
@@ -166,6 +166,7 @@ function updateUser({ user_id, first_name, last_name, email, password }) {
 //! node problems: can't make a modul "node --trace-warnings"
 
 function checkLogin({ email, password }) {
+    //console.log(email, password);
     return getUserByEmail(email).then((foundUser) => {
         //console.log(foundUser[0].password_hash);
 
@@ -203,4 +204,5 @@ module.exports = {
     deleteSiganture,
     updateProfile,
     getSignaturesIdBYUserID,
+    updateUser,
 };
