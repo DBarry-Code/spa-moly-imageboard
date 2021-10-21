@@ -34,8 +34,8 @@ main {
 }
 
 .logoImg {
-    height: 300px;
-    width: 325px;
+    height: 200px;
+    width: 225px;
     /* box-shadow: 10px 20px 15px silver; */
     margin-top: 25px;
     margin-bottom: 25px;
@@ -96,8 +96,7 @@ form {
 }
 
 .fromCanvas {
-    display: flex;
-    flex-direction: column;
+    align-items: center;
 }
 
 .mbText {
@@ -105,8 +104,9 @@ form {
 }
 
 #signature-pad {
-    margin-top: -15px;
+    align-self: center;
     background-color: white;
+
     border-radius: 5px;
     border: 1px solid black;
 }
@@ -115,6 +115,11 @@ form {
     margin-top: 5px;
     align-self: center;
     cursor: pointer;
+}
+
+.error {
+    margin-top: 5px;
+    color: red;
 }
 
 #submit {
@@ -176,4 +181,41 @@ form {
     grid-area: footer;
     margin-top: 15px;
     padding: 5px;
+}
+
+/* Password info text */
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+    display: none;
+    animation: message 1s linear;
+    animation-fill-mode: forwards;
+    background: #f1f1f1;
+    color: #000;
+    /* position: relative; */
+    /* margin-top: 10px; */
+}
+
+@keyframes message {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+    50% {
+        display: block;
+    }
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green;
+}
+
+/* Add a red text color and an "x" icon when the requirements are wrong */
+.invalid {
+    color: red;
 }

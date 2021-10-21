@@ -2,8 +2,12 @@
 <main>
     <img class="logoImg" src="/assets/img/pizzaclub_sm.jpg" alt="clublogo">
     <h2>{{{text}}} </h2>
-
+    <p>if you're not register please <a href="/register">Register</a></p>
+    {{#if error}}
+    <p class="error">{{error}} </p>
+    {{/if}}
     {{> forms/log}}
 
     </main>
+    <script src="/pass-info.js"></script>
 {{> footer}}

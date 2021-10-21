@@ -7,6 +7,7 @@
             name="first_name"
             placeholder="First name"
             value="{{first_name}}"
+            autocomplete="name"
             required
         />
     </div>
@@ -18,6 +19,7 @@
             name="last_name"
             placeholder="Last name"
             value="{{last_name}}"
+            autocomplete="family-name"
             required
         />
     </div>
@@ -29,18 +31,31 @@
             name="email"
             placeholder="E-M@il"
             value="{{email}}"
+            autocomplete="email"
             required
         />
     </div>
 
     <div class="formFirst">
         <label for="age">Age</label>
-        <input type="number" name="age" placeholder="Age" value="{{age}}" />
+        <input
+            type="number"
+            name="age"
+            placeholder="Age"
+            value="{{age}}"
+            autocomplete="age"
+        />
     </div>
 
     <div class="formLast">
         <label for="city">City</label>
-        <input type="text" name="city" placeholder="City" value="{{city}}" />
+        <input
+            type="text"
+            name="city"
+            placeholder="City"
+            value="{{city}}"
+            autocomplete="home"
+        />
     </div>
 
     <div class="formEmail">
@@ -50,6 +65,7 @@
             name="homepage"
             placeholder="http://www.site.com"
             value="{{homepage}}"
+            autocomplete="url"
         />
     </div>
 

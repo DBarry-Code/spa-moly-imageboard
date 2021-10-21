@@ -38,10 +38,11 @@ router.post("/register", (req, res) => {
         })
         .catch((error) => {
             console.log("[register]", error);
-            if (error === "users_email_key") {
-                res.statusCode(400);
-                //TODO: Show error user!
-                res.send("Email already in use");
+            if (error.constraint === "users_email_key") {
+                res.status(400);
+                res.render("register", {
+                    error: "Email already in use",
+                });
             }
         });
 });

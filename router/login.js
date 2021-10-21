@@ -26,15 +26,15 @@ router.post("/login", (req, res) => {
 
     if (!email || !password) {
         return res.render("login", {
-            title: "login",
-            err: "Please fill out all fields",
+            text: "Please Log-In",
+            error: "Please fill out all fields",
         });
     }
     checkLogin({ email, password }).then((foundUser) => {
         if (!foundUser) {
             return res.render("login", {
-                title: "login",
-                err: "WRONG INPUT",
+                text: "Please Log-In",
+                error: "WRONG INPUT",
             });
         }
 

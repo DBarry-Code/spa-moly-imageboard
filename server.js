@@ -43,6 +43,11 @@ app.get("/", requireLoggedUser, (req, res) => {
     }
 });
 
+app.get("/favicon.ico", (req, res) => {
+    res.status(204);
+    return response.end();
+});
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
