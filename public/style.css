@@ -106,7 +106,6 @@ form {
 #signature-pad {
     align-self: center;
     background-color: white;
-
     border-radius: 5px;
     border: 1px solid black;
 }
@@ -145,6 +144,7 @@ form {
     font-size: 1rem;
     letter-spacing: 0.15rem;
 }
+
 .logout,
 .action {
     background: none;

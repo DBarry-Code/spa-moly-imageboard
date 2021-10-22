@@ -1,5 +1,6 @@
 const { checkLogin } = require("../db");
 const { requireLoggedUser } = require("../middlewares");
+const { passwordCheck } = require("../checks");
 const { express, Router } = require("express");
 const cookieSession = require("cookie-session");
 
@@ -30,24 +31,32 @@ router.post("/login", (req, res) => {
             error: "Please fill out all fields",
         });
     }
-    checkLogin({ email, password }).then((foundUser) => {
-        if (!foundUser) {
-            return res.render("login", {
-                text: "Please Log-In",
-                error: "WRONG INPUT",
-            });
-        }
 
-        req.session.user_id = foundUser[0].id;
-        res.redirect("/thank-you");
-        return;
-    });
+    if (passwordCheck(password) === true) {
+        checkLogin({ email, password }).then((foundUser) => {
+            if (!foundUser) {
+                return res.render("login", {
+                    text: "Please Log-In",
+                    error: "WRONG INPUT",
+                });
+            }
+
+            req.session.user_id = foundUser[0].id;
+            res.redirect("/thank-you");
+            return;
+        });
+    } else {
+        return res.render("login", {
+            text: "Please Log-In",
+            error: "Nice try... try it again!",
+        });
+    }
 });
 
 //POST logout
 router.post("/logout", requireLoggedUser, (req, res) => {
     req.session.user_id = null;
-    return res.redirect("/");
+    return res.redirect("/login");
 });
 
 module.exports = router;

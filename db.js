@@ -1,5 +1,6 @@
 const spicedPg = require("spiced-pg");
 const bcrypt = require("bcryptjs");
+const { passwordCheck } = require("./checks");
 const db = spicedPg(getDatabaseURL());
 
 function getDatabaseURL() {
@@ -156,7 +157,7 @@ function updateUser(user_id, { first_name, last_name, email, password }) {
             WHERE id = $1`,
             [user_id, first_name, last_name, email]
         );
-    } else
+    } else if (passwordCheck(password) === true) {
         return hash(password).then((password_hash) => {
             return db.query(
                 `UPDATE users
@@ -165,6 +166,7 @@ function updateUser(user_id, { first_name, last_name, email, password }) {
                 [user_id, first_name, last_name, email, password_hash]
             );
         });
+    }
 }
 
 //! node problems: can't make a modul "node --trace-warnings"

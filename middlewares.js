@@ -7,7 +7,7 @@ function requireLoggedUser(req, res, next) {
         res.redirect("/register");
         return;
     }
-    next();
+    return next();
 }
 
 function requireSignature(req, res, next) {
@@ -17,8 +17,7 @@ function requireSignature(req, res, next) {
     // remember: middlewares can contain async operations.
     getSignatureById(req.session.user_id).then((signature) => {
         if (signature) {
-            next();
-            return;
+            return next();
         }
         return res.redirect("/");
     });

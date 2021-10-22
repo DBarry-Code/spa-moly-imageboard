@@ -1,5 +1,5 @@
 const { createUser } = require("../db");
-
+const { passwordCheck } = require("../checks");
 const { express, Router } = require("express");
 const cookieSession = require("cookie-session");
 
@@ -30,21 +30,27 @@ router.post("/register", (req, res) => {
             error: "WRONG INPUT",
         });
     }
-
-    createUser(req.body)
-        .then(({ id }) => {
-            req.session.user_id = id;
-            return res.redirect("/profile");
-        })
-        .catch((error) => {
-            console.log("[register]", error);
-            if (error.constraint === "users_email_key") {
-                res.status(400);
-                return res.render("register", {
-                    error: "Email already in use",
-                });
-            }
+    if (passwordCheck(password) === true) {
+        createUser(req.body)
+            .then(({ id }) => {
+                req.session.user_id = id;
+                return res.redirect("/profile");
+            })
+            .catch((error) => {
+                console.log("[register]", error);
+                if (error.constraint === "users_email_key") {
+                    res.status(400);
+                    return res.render("register", {
+                        error: "Email already in use",
+                    });
+                }
+            });
+    } else {
+        return res.render("register", {
+            text: "Please Log-In",
+            error: "Nice try... try it again!",
         });
+    }
 });
 
 module.exports = router;
