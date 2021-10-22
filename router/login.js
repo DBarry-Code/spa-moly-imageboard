@@ -40,6 +40,7 @@ router.post("/login", (req, res) => {
 
         req.session.user_id = foundUser[0].id;
         res.redirect("/thank-you");
+        return;
     });
 });
 

@@ -34,13 +34,13 @@ router.post("/register", (req, res) => {
     createUser(req.body)
         .then(({ id }) => {
             req.session.user_id = id;
-            res.redirect("/profile");
+            return res.redirect("/profile");
         })
         .catch((error) => {
             console.log("[register]", error);
             if (error.constraint === "users_email_key") {
                 res.status(400);
-                res.render("register", {
+                return res.render("register", {
                     error: "Email already in use",
                 });
             }

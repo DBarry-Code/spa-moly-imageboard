@@ -32,7 +32,7 @@ router.post("/profile", requireLoggedUser, (req, res) => {
 
     createProfile(req.body, user_id)
         .then((profile) => {
-            res.redirect("/");
+            return res.redirect("/");
         })
         .catch((error) => {
             console.log("[POST profile]", error);
@@ -43,7 +43,7 @@ router.get("/profile/edit", requireLoggedUser, (req, res) => {
     const { user_id } = req.session;
 
     getUserProfil(user_id).then((profile) => {
-        res.render("edit", {
+        return res.render("edit", {
             text: "Edit your profile",
             ...profile,
         });
@@ -60,12 +60,12 @@ router.post("/profile/edit", requireLoggedUser, (req, res) => {
         updateUser(user_id, { ...req.body }),
     ])
         .then(() => {
-            res.redirect("/profile/edit");
+            return res.redirect("/profile/edit");
         })
         .catch((error) => {
             console.log("POST - /profile/edit error", error);
             getUserProfil(user_id).then((profile) => {
-                res.render("edit", {
+                return res.render("edit", {
                     text: "Edit your profile",
                     ...profile,
                     error: "Check your Input",

@@ -54,12 +54,6 @@ app.get("/", requireLoggedUser, (req, res) => {
     }
 });
 
-//GET favicon to prevent errors mayby include a faviicon ?
-app.get("/favicon.ico", (req, res) => {
-    res.status(204);
-    return;
-});
-
 // Port setup
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

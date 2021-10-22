@@ -20,7 +20,7 @@ function requireSignature(req, res, next) {
             next();
             return;
         }
-        res.redirect("/");
+        return res.redirect("/");
     });
 }
 

@@ -23,11 +23,11 @@ router.get("/petition", requireLoggedUser, (req, res) => {
 
     getSignatureById(user_id).then((signature) => {
         if (signature) {
-            res.redirect("/thank-you");
-            return;
+            return res.redirect("/thank-you");
         }
-        res.render("index", {
+        return res.render("index", {
             text: "Please sign to my 'NO PINEAPPLE ON PIZZA' movement",
+            title: "Petition",
         });
     });
 });
@@ -38,8 +38,7 @@ router.post("/petition", requireLoggedUser, (req, res) => {
 
     createSignatures(req.body, user_id)
         .then(() => {
-            res.redirect("/thank-you");
-            return;
+            return res.redirect("/thank-you");
         })
         .catch((error) => {
             console.log("[Post error]", error);
@@ -57,8 +56,9 @@ router.get("/thank-you", requireLoggedUser, requireSignature, (req, res) => {
         getUserByID(user_id),
     ])
         .then(([signature, headcount, user]) => {
-            res.render("thank-you", {
+            return res.render("thank-you", {
                 text: "thanks for signing, now you are a",
+                title: "Thank you",
                 signature,
                 headcount,
                 user: user[0],

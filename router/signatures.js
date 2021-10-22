@@ -16,7 +16,7 @@ router.use(
 router.get("/signatures", requireLoggedUser, requireSignature, (req, res) => {
     getSignatures()
         .then((signatures) => {
-            res.render("signatures", {
+            return res.render("signatures", {
                 text: "All singers:",
                 signatures,
                 headcount: `${signatures.length} signers all ready`,
@@ -37,7 +37,7 @@ router.get(
 
         getSignatureByCity(city)
             .then((signatures) => {
-                res.render("signatureCity", {
+                return res.render("signatureCity", {
                     text: `There are ${signatures.length} sigeners from`,
                     signatures,
                     city,
@@ -54,7 +54,7 @@ router.post("/unsign", requireLoggedUser, requireSignature, (req, res) => {
 
     deleteSiganture(user_id)
         .then(() => {
-            res.redirect("/petition");
+            return res.redirect("/petition");
         })
         .catch((error) => {
             console.log("ungsig error", error);
