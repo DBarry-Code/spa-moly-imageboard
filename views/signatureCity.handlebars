@@ -2,11 +2,11 @@
 
 <main>
     <img class="thirdImg" src="/assets/img/pizzapinapple.jpg" alt="shhhh">
-    <h2 class="mbText">{{text}} </h2>
+    <h2 class="mbText">{{text}} {{capitalizeFirst city}} </h2>
     {{#each signatures}}
     {{> signaturecity}}
     {{/each}} 
-    <a class="signersLink" href="/thank-you"><p>Back home</p></a>
+    <a class="signersLink" href="/signatures"><p>Back to list</p></a>
 </main>
 
 {{> footer}}

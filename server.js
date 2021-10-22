@@ -6,6 +6,15 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
+if (process.env.NODE_ENV == "production") {
+    app.use((req, res, next) => {
+        if (req.headers["x-forwarded-proto"].startsWith("https")) {
+            return next();
+        }
+        res.redirect(`https://${req.hostname}${req.url}`);
+    });
+}
+
 //express Router
 const login = require("./router/login");
 const register = require("./router/register");
@@ -34,20 +43,23 @@ app.use(
     })
 );
 
+//express Router routing
 app.use(login, register, profile, signatures, petition);
 
-//Get root
+//GET root
 app.get("/", requireLoggedUser, (req, res) => {
     if (req.session.user_id) {
         res.redirect("/petition");
     }
 });
 
+//GET favicon to prevent errors mayby include a faviicon ?
 app.get("/favicon.ico", (req, res) => {
     res.status(204);
-    return response.end();
+    return;
 });
 
+// Port setup
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });

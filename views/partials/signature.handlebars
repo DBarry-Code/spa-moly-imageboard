@@ -1,10 +1,16 @@
 <div>
-    <a class="singerLink" href="{{homepage}}" target="_blank">{{first_name}}
-        {{last_name}}
+    <a class="singerLink" href="{{homepage}}" target="_blank">{{capitalizeFirst
+            first_name
+        }}
+        {{capitalizeFirst last_name}}
     </a>
 
     <span>
         {{age}}
     </span>
-    <a class="singerLink" href="/signatures/{{city}}">{{city}} </a>
+    <a
+        class="singerLink"
+        href="/signatures/{{allLowerCase city}}"
+    >{{capitalizeFirst city}}
+    </a>
 </div>

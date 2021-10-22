@@ -38,7 +38,7 @@ router.get(
         getSignatureByCity(city)
             .then((signatures) => {
                 res.render("signatureCity", {
-                    text: `There are ${signatures.length} sigeners from ${city}`,
+                    text: `There are ${signatures.length} sigeners from`,
                     signatures,
                     city,
                 });
