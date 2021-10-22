@@ -137,7 +137,6 @@ function deleteSiganture(id) {
 }
 
 function updateProfile(user_id, { age, city, homepage }) {
-    console.log(user_id);
     return db
         .query(
             `INSERT INTO user_profiles (user_id, age, city, homepage)

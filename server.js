@@ -50,6 +50,7 @@ app.use(login, register, profile, signatures, petition);
 app.get("/", requireLoggedUser, (req, res) => {
     if (req.session.user_id) {
         res.redirect("/petition");
+        return;
     }
 });
 

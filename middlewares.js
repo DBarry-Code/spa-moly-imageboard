@@ -5,6 +5,7 @@ function requireLoggedUser(req, res, next) {
     // else move forward!
     if (!req.session.user_id) {
         res.redirect("/register");
+        return;
     }
     next();
 }
