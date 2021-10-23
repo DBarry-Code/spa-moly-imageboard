@@ -35,7 +35,8 @@ router.post("/profile", requireLoggedUser, (req, res) => {
             return res.redirect("/");
         })
         .catch((error) => {
-            console.log("[POST profile]", error);
+            //console.log("[POST profile]", error);
+            return res.redirect("/profile/edit");
         });
 });
 
