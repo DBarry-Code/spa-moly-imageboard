@@ -108,7 +108,6 @@ function createUser({ first_name, last_name, email, password }) {
 }
 
 function createProfile({ age, city, homepage }, user_id) {
-    //console.log(user_id);
     return db
         .query(
             `INSERT INTO user_profiles(user_id, age, city, homepage) VALUES($1, $2, $3, $4) RETURNING *`,

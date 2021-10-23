@@ -2,6 +2,7 @@ const { getSignatures, getSignatureByCity, deleteSiganture } = require("../db");
 const { requireLoggedUser, requireSignature } = require("../middlewares");
 const { express, Router } = require("express");
 const cookieSession = require("cookie-session");
+const req = require("express/lib/request");
 
 const router = Router();
 
@@ -60,6 +61,10 @@ router.post("/unsign", requireLoggedUser, requireSignature, (req, res) => {
             console.log("ungsig error", error);
             res.sendStatus(500);
         });
+});
+
+router.post("/later", (req, res) => {
+    return res.redirect("/profile/edit");
 });
 
 module.exports = router;

@@ -132,6 +132,11 @@ form {
     background-color: red;
 }
 
+#later {
+    cursor: pointer;
+    background-color: darkgoldenrod;
+}
+
 .btn {
     align-self: center;
     font-size: 16px;
