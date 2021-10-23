@@ -55,7 +55,9 @@ router.post("/login", (req, res) => {
 
 //POST logout
 router.post("/logout", requireLoggedUser, (req, res) => {
-    req.session.user_id = null;
+    // req.session.user_id = null;
+    res.clearCookie("session.sig", { path: "/" });
+    res.clearCookie("session", { path: "/" });
     return res.redirect("/login");
 });
 
