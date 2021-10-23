@@ -1,5 +1,5 @@
 const { createUser } = require("../db");
-const { passwordCheck } = require("../checks");
+const { passwordCheck, checkEmail } = require("../checks");
 const { express, Router } = require("express");
 const cookieSession = require("cookie-session");
 
@@ -30,7 +30,7 @@ router.post("/register", (req, res) => {
             error: "WRONG INPUT",
         });
     }
-    if (passwordCheck(password) === true) {
+    if (passwordCheck(password) === true && checkEmail(email) === true) {
         createUser(req.body)
             .then(({ id }) => {
                 req.session.user_id = id;

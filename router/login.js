@@ -1,6 +1,7 @@
 const { checkLogin } = require("../db");
 const { requireLoggedUser } = require("../middlewares");
-const { passwordCheck } = require("../checks");
+const { passwordCheck, checkEmail } = require("../checks");
+
 const { express, Router } = require("express");
 const cookieSession = require("cookie-session");
 
@@ -32,19 +33,26 @@ router.post("/login", (req, res) => {
         });
     }
 
-    if (passwordCheck(password) === true) {
-        checkLogin({ email, password }).then((foundUser) => {
-            if (!foundUser) {
+    if (passwordCheck(password) === true && checkEmail(email) === true) {
+        checkLogin({ email, password })
+            .then((foundUser) => {
+                if (!foundUser) {
+                    return res.render("login", {
+                        text: "Please Log-In",
+                        error: "WRONG INPUT",
+                    });
+                }
+
+                req.session.user_id = foundUser[0].id;
+                res.redirect("/thank-you");
+                return;
+            })
+            .catch((error) => {
                 return res.render("login", {
                     text: "Please Log-In",
                     error: "WRONG INPUT",
                 });
-            }
-
-            req.session.user_id = foundUser[0].id;
-            res.redirect("/thank-you");
-            return;
-        });
+            });
     } else {
         return res.render("login", {
             text: "Please Log-In",

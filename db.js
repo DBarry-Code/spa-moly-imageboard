@@ -1,6 +1,6 @@
 const spicedPg = require("spiced-pg");
 const bcrypt = require("bcryptjs");
-const { passwordCheck } = require("./checks");
+const { passwordCheck, checkEmail } = require("./checks");
 const db = spicedPg(getDatabaseURL());
 
 function getDatabaseURL() {
@@ -149,7 +149,11 @@ function updateProfile(user_id, { age, city, homepage }) {
 }
 
 function updateUser(user_id, { first_name, last_name, email, password }) {
-    if (!password || password == "" || password == undefined) {
+    if (
+        (checkEmail(email) === true && !password) ||
+        password == "" ||
+        password == undefined
+    ) {
         return db.query(
             `UPDATE users
             SET first_name = $2, last_name = $3, email = $4
